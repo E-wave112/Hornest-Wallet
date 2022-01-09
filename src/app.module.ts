@@ -3,23 +3,27 @@ import { AppController } from './app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
+import { ConfigModule } from '@nestjs/config';
+import { getConnectionOptions } from 'typeorm';
+import { Connection } from 'typeorm';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      'type':'postgres',
-      'host':'localhost',
-      'port':5432,
-      'username':'ewave',
-      'password':'dwave101',
-      'entities':[],
-      'database':'horn-wallet',
-      'synchronize':false,
-      'autoLoadEntities':true,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `${process.env.NODE_ENV}.env`,
     }),
-    UsersModule
+    TypeOrmModule.forRootAsync({
+      useFactory: async () =>
+        Object.assign(await getConnectionOptions(), {
+          autoLoadEntities: true,
+        }),
+    }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private connection: Connection) {}
+}
