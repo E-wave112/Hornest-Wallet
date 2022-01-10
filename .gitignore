@@ -18,6 +18,7 @@ secret.js
 # OS
 .DS_Store
 
+test.js
 # Tests
 /coverage
 /.nyc_output

@@ -39,7 +39,7 @@ export class UsersService {
         jwtConstants.ENCRYPTION_KEY,
         randomIv,
       );
-      let encrypted = cipher.update(obj, 'utf8', 'hex');
+      let encrypted = cipher.update(obj, 'utf-8', 'hex');
       encrypted += cipher.final('hex');
       return encrypted;
     } catch (err: any) {
@@ -55,9 +55,9 @@ export class UsersService {
         jwtConstants.ENCRYPTION_KEY,
         randomIv,
       );
-      let decrypted = decipher.update(obj, 'hex', 'utf8');
-      decrypted += decipher.final('utf8');
-      console.log(decrypted.toString());
+      let decrypted = decipher.update(obj, 'hex', 'utf-8');
+      decrypted += decipher.final('utf-8');
+      // console.log(decrypted);
       return decrypted;
     } catch (err: any) {
       console.error(err.message);
@@ -72,15 +72,9 @@ export class UsersService {
       if (!singleUser) {
         throw new HttpException('User not found', 404);
       }
-      return {
-        ...singleUser,
-        card: this.cardDecryption(singleUser.card)
-          ? singleUser.card
-          : singleUser.card,
-        cardCvv: this.cardDecryption(singleUser.cardCvv)
-          ? singleUser.cardCvv
-          : singleUser.cardCvv,
-      };
+     
+      return singleUser;
+ 
     } catch (err: any) {
       console.error(err.message);
       throw new HttpException(err.message, 500);

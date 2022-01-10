@@ -1,3 +1,5 @@
+import { Exclude } from 'class-transformer';
+
 import {
   Column,
   Entity,
@@ -13,6 +15,8 @@ import { IsEmail, Min } from 'class-validator';
 
 @Entity()
 export class User extends BaseEntity {
+
+  
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -26,17 +30,21 @@ export class User extends BaseEntity {
   @IsEmail({ message: 'Email is not valid' })
   email: string;
 
-  @Column()
+  
+  @Column({select:false})
   @Min(8, { message: 'Password must be at least 8 characters' })
   password: string;
 
-  @Column({ default: '' })
+
+  @Column({ default: '',select:false })
   card?: string;
 
-  @Column({ default: '' })
+  @Exclude()
+  @Column({ default: '',select:false })
   cardExpiration?: string;
 
-  @Column({ default: '' })
+  @Exclude()
+  @Column({ default: '',select:false })
   cardCvv?: string;
 
   @Column()
@@ -56,4 +64,5 @@ export class User extends BaseEntity {
   async validatePassword(password: string): Promise<boolean> {
     return await bcrypt.compare(password, this.password);
   }
+
 }
