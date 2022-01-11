@@ -1,5 +1,5 @@
 # Hornest-Wallet
-A simple(ongoing) wallet system built with NestJS
+A simple(ongoing) wallet system built with NestJS,postgres and TypeORM
 
 ## Functionalities to be included
 - Abilities for users to be able to save and withdraw money to their wallets using payment gateways(Flutterwave or Paystack)
