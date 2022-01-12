@@ -1,11 +1,11 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { User } from './users.entity';
+import { Wallet } from '../wallet/wallet.entity';
 import { getRepository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { emailRegex, jwtConstants } from './users.constants';
 import { JwtService } from '@nestjs/jwt';
 import * as crypto from 'crypto';
-import { userInfo } from 'os';
 const algorithm: string = 'aes-256-cbc';
 
 const randomIv = crypto.randomBytes(16);
@@ -99,6 +99,10 @@ export class UsersService {
     });
 
     const savedUser = await newUser.save();
+    // automatically create the user wallet
+    const walletInstance = new Wallet()
+    walletInstance.user = savedUser;
+    await walletInstance.save()
     return { message: 'user created successfully', savedUser };
   }
 

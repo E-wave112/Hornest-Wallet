@@ -6,12 +6,14 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { getConnectionOptions } from 'typeorm';
 import { Connection } from 'typeorm';
+import { WalletModule } from './wallet/wallet.module';
+import envConfig from './config/config';
+import nestConfig from './config/nest-config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: `${process.env.NODE_ENV}.env`,
+      load: [nestConfig],
     }),
     TypeOrmModule.forRootAsync({
       useFactory: async () =>
@@ -20,6 +22,7 @@ import { Connection } from 'typeorm';
         }),
     }),
     UsersModule,
+    WalletModule,
   ],
   controllers: [AppController],
   providers: [AppService],

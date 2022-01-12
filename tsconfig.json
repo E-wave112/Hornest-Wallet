@@ -10,6 +10,7 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
+    "typeRoots": ["./global.d.ts", "./node_modules/@types"],
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,

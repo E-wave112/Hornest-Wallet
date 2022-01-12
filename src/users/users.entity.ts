@@ -48,6 +48,9 @@ export class User extends BaseEntity {
   cardCvv?: string;
 
   @Column()
+  accountNumber?: string;
+
+  @Column()
   @CreateDateColumn()
   createdAt: Date;
 

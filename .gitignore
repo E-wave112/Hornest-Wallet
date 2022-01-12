@@ -2,6 +2,8 @@
 /dist
 /node_modules
 
+
+migrations/
 # environment variables
 *.env
 
@@ -13,7 +15,7 @@ pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
-secret.js
+secret*
 
 # OS
 .DS_Store
