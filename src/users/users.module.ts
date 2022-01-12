@@ -20,8 +20,8 @@ import { UserAuthGuard } from './user.guard';
       signOptions: { expiresIn: '1d' },
     }),
   ],
-  providers: [UsersService, LocalStrategy, JwtStrategy,UserAuthGuard],
-  exports: [TypeOrmModule, UsersService,User],
+  providers: [UsersService, LocalStrategy, JwtStrategy, UserAuthGuard],
+  exports: [TypeOrmModule, UsersService, User],
   controllers: [UsersController],
 })
 export class UsersModule {}

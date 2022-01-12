@@ -6,7 +6,7 @@ import * as bcrypt from 'bcryptjs';
 import { emailRegex, jwtConstants } from './users.constants';
 import { JwtService } from '@nestjs/jwt';
 import * as crypto from 'crypto';
-const algorithm: string = 'aes-256-cbc';
+const algorithm = 'aes-256-cbc';
 
 const randomIv = crypto.randomBytes(16);
 
@@ -14,7 +14,7 @@ const randomIv = crypto.randomBytes(16);
 export class UsersService {
   constructor(private jwtService: JwtService) {}
   async findUser(email: string, password: string): Promise<User | string> {
-    let UserRepository = getRepository(User);
+    const UserRepository = getRepository(User);
     const singleUser = await UserRepository.findOne({
       where: { email: email },
     });
@@ -67,14 +67,13 @@ export class UsersService {
 
   async viewUser(id: any) {
     try {
-      let UserRepository = getRepository(User);
+      const UserRepository = getRepository(User);
       const singleUser = await UserRepository.findOne(id);
       if (!singleUser) {
         throw new HttpException('User not found', 404);
       }
-     
+
       return singleUser;
- 
     } catch (err: any) {
       console.error(err.message);
       throw new HttpException(err.message, 500);
@@ -82,7 +81,7 @@ export class UsersService {
   }
 
   async register(user: any) {
-    let UserRepository = getRepository(User);
+    const UserRepository = getRepository(User);
     const { firstName, lastName, email, password } = user;
     const existingUser = await UserRepository.findOne({
       where: { email: email },
@@ -100,16 +99,18 @@ export class UsersService {
 
     const savedUser = await newUser.save();
     // automatically create the user wallet
-    const walletInstance = new Wallet()
+    const walletInstance = new Wallet();
     walletInstance.user = savedUser;
-    await walletInstance.save()
+    await walletInstance.save();
     return { message: 'user created successfully', savedUser };
   }
 
   async login(obj: any) {
     try {
-      let UserRepository = getRepository(User);
-      let user = await UserRepository.findOne({ where: { email: obj.email } });
+      const UserRepository = getRepository(User);
+      const user = await UserRepository.findOne({
+        where: { email: obj.email },
+      });
       console.log(user);
       const payload = { sub: user.id };
       return {
@@ -124,8 +125,8 @@ export class UsersService {
 
   async updateUser(id: any, user: any) {
     try {
-      let UserRepository = getRepository(User);
-      let singleUser = await UserRepository.findOne(id);
+      const UserRepository = getRepository(User);
+      const singleUser = await UserRepository.findOne(id);
       if (user.card) {
         user.card = await this.cardTokenization(user.card);
       }
@@ -133,7 +134,7 @@ export class UsersService {
         user.cardCvv = await this.cardTokenization(user.cardCvv);
       }
 
-      let updatedUser = await UserRepository.save({
+      const updatedUser = await UserRepository.save({
         id: singleUser.id,
         ...user,
       });

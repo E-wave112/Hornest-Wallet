@@ -1,20 +1,20 @@
-import path from "path";
-import dotenv from "dotenv";
+import path from 'path';
+import dotenv from 'dotenv';
 
 // Parsing the env file from the root of the project
-dotenv.config({path:path.resolve(__dirname, '../.env')});
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 // Interface to load env variables
 // Note these variables can possibly be undefined
 // as someone could skip these varibales or not setup a .env file at all
 
 interface ENV {
-    NODE_ENV: string | undefined;
-    SECRET_KEY: string | undefined;
-    ENCRYPTION_KEY: string | undefined;
-    PORT: number | undefined;
-    FLW_PUBLIC_KEY: string | undefined;
-    FLW_SECRET_KEY: string | undefined;
+  NODE_ENV: string | undefined;
+  SECRET_KEY: string | undefined;
+  ENCRYPTION_KEY: string | undefined;
+  PORT: number | undefined;
+  FLW_PUBLIC_KEY: string | undefined;
+  FLW_SECRET_KEY: string | undefined;
 }
 
 interface Config {
@@ -36,14 +36,13 @@ const getConfig = (): ENV => {
     PORT: process.env.PORT ? Number(process.env.PORT) : undefined,
     FLW_PUBLIC_KEY: process.env.FLW_PUBLIC_KEY,
     FLW_SECRET_KEY: process.env.FLW_SECRET_KEY,
-    
   };
 };
 
-// Throwing an Error if any field was undefined we don't 
-// want our app to run if it can't connect to DB and ensure 
+// Throwing an Error if any field was undefined we don't
+// want our app to run if it can't connect to DB and ensure
 // that these fields are accessible. If all is good return
-// it as Config which just removes the undefined from our type 
+// it as Config which just removes the undefined from our type
 // definition.
 
 const getSanitzedConfig = (config: ENV): Config => {
@@ -59,4 +58,4 @@ const config = getConfig();
 
 const sanitizedConfig = getSanitzedConfig(config);
 
-export default sanitizedConfig
+export default sanitizedConfig;
