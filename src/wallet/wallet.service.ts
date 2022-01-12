@@ -4,8 +4,8 @@ import { UsersService } from '../users/users.service';
 import { HttpException } from '@nestjs/common';
 import { getRepository } from 'typeorm';
 import { Wallet } from './wallet.entity';
-const FLW_PUBLIC_KEY: string = process.env.FLW_PUBLIC_KEY || 'FLWPUBK_TEST-2d7486feb5f5e9345ef742ef1a909534-X';
-const FLW_SECRET_KEY: string = process.env.FLW_SECRET_KEY || 'FLWSECK_TEST-7889489c1b7483f8b419a675890df15d-X'
+const FLW_PUBLIC_KEY: string = process.env.FLW_PUBLIC_KEY
+const FLW_SECRET_KEY: string = process.env.FLW_SECRET_KEY
 
 @Injectable()
 export class WalletService {
