@@ -23,6 +23,7 @@ Start the development server (remember to put in the right environment variables
 ```
 $ yarn start:dev
 ```
+or
 
 ```
 $ npm run start:dev
