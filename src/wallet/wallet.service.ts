@@ -4,6 +4,9 @@ import { UsersService } from '../users/users.service';
 import { HttpException } from '@nestjs/common';
 import { getRepository } from 'typeorm';
 import { Wallet } from './wallet.entity';
+import { User } from '../users/users.entity';
+import { CRYPTO_URL } from './wallet.constants';
+import axios from 'axios';
 const FLW_PUBLIC_KEY: string = process.env.FLW_PUBLIC_KEY;
 const FLW_SECRET_KEY: string = process.env.FLW_SECRET_KEY;
 
@@ -55,7 +58,7 @@ export class WalletService {
     }
   }
 
-  async getBankCode(bank: string) {
+  async getBankCode(bank: string):Promise<string> {
     let bank_code = '';
     switch (bank_code) {
       case (bank = 'Access Bank'):
@@ -126,10 +129,20 @@ export class WalletService {
     return bank_code;
   }
 
-  async checkIfWalletExists(obj: object) {
+  async checkIfWalletExists(obj: object):Promise<any|User> {
     try {
       const walletRepository = getRepository(Wallet);
       return await walletRepository.findOne(obj);
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(error.message, 500);
+    }
+  }
+
+  async getCoinData():Promise<object> {
+    try {
+      const response = await axios.get(CRYPTO_URL)
+      return response.data
     } catch (error) {
       console.error(error);
       throw new HttpException(error.message, 500);

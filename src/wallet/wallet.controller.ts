@@ -1,4 +1,4 @@
-import { Controller, HttpException, Post } from '@nestjs/common';
+import { Controller, Get, HttpException, Post } from '@nestjs/common';
 import { UserAuthGuard } from '../users/user.guard';
 import { WalletService } from './wallet.service';
 import { UseGuards } from '@nestjs/common';
@@ -67,5 +67,10 @@ export class WalletController {
     wallet.balance = wallet.balance - Number(req.body.amount);
     await wallet.save();
     return await this.walletService.flutterwaveWithdraw(payload);
+  }
+
+  @Get('price')
+  async getCoin() {
+    return await this.walletService.getCoinData()
   }
 }
