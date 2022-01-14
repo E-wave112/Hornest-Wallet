@@ -60,7 +60,7 @@ export class WalletService {
 
   async getBankCode(bank: string):Promise<string> {
     let bank_code = '';
-    switch (bank_code) {
+    switch (bank) {
       case (bank = 'Access Bank'):
         bank_code = '044';
         break;

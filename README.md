@@ -23,7 +23,10 @@ Start the development server (remember to put in the right environment variables
 ```
 $ yarn start:dev
 ```
+or
 
 ```
 $ npm run start:dev
 ```
+
+The API is also documented via the NestJs built-in [Open-API](https://swagger.io/specification/) specification
