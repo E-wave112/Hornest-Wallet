@@ -13,7 +13,7 @@ import {
 import * as bcrypt from 'bcryptjs';
 import { IsEmail, Min } from 'class-validator';
 
-@Entity()
+@Entity('User')
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -28,7 +28,7 @@ export class User extends BaseEntity {
   @IsEmail({ message: 'Email is not valid' })
   email: string;
 
-  @Column({ select: false })
+  @Column()
   @Min(8, { message: 'Password must be at least 8 characters' })
   password: string;
 
@@ -43,7 +43,7 @@ export class User extends BaseEntity {
   @Column({ default: '', select: false })
   cardCvv?: string;
 
-  @Column()
+  @Column({ default: '', select: false })
   accountNumber?: string;
 
   @Column()

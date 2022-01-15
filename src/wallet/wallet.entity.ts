@@ -10,12 +10,12 @@ import {
 } from 'typeorm';
 import { User } from '../users/users.entity';
 
-@Entity()
+@Entity('Wallet')
 export class Wallet extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne((type) => User, (user) => user.id, { onDelete: 'CASCADE' })
+  @OneToOne(() => User, (user) => user.id, { onDelete: 'CASCADE', eager: true })
   @JoinColumn()
   user: User;
 

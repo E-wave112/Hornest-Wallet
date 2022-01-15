@@ -2,15 +2,15 @@
     "type":"postgres",
     "host":"localhost",
     "port":5432,
-    "username":"ewave",
-    "password":"dwave101",
+    "username":"postgres",
+    "password":"postgres",
     "entities":[],
     "database":"hornest", 
-    "synchronize":false,
+    "synchronize":true,
     "autoLoadEntities":true,
     "migrations": ["migration/*"],
     "cli": {
         "migrationsDir": "migrations"
     },
-    "migrationsRun": true
+    "migrationsRun": false
   }

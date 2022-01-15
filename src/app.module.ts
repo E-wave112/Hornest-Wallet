@@ -13,7 +13,8 @@ import nestConfig from './config/nest-config';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [nestConfig],
+      envFilePath: '.env',
+      isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
       useFactory: async () =>

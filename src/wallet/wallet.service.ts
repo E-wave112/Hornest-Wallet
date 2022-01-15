@@ -58,7 +58,7 @@ export class WalletService {
     }
   }
 
-  async getBankCode(bank: string):Promise<string> {
+  async getBankCode(bank: string): Promise<string> {
     let bank_code = '';
     switch (bank) {
       case (bank = 'Access Bank'):
@@ -129,7 +129,7 @@ export class WalletService {
     return bank_code;
   }
 
-  async checkIfWalletExists(obj: object):Promise<any|User> {
+  async checkIfWalletExists(obj: object): Promise<any | User> {
     try {
       const walletRepository = getRepository(Wallet);
       return await walletRepository.findOne(obj);
@@ -139,10 +139,21 @@ export class WalletService {
     }
   }
 
-  async getCoinData():Promise<object> {
+  async getCoinData(): Promise<object> {
     try {
-      const response = await axios.get(CRYPTO_URL)
-      return response.data
+      const response = await axios.get(CRYPTO_URL);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(error.message, 500);
+    }
+  }
+
+  async getAllWallets(): Promise<Wallet[]> {
+    try {
+      const walletRepository = getRepository(Wallet);
+      const wallets = await walletRepository.find();
+      return wallets;
     } catch (error) {
       console.error(error);
       throw new HttpException(error.message, 500);

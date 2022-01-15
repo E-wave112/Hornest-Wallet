@@ -13,7 +13,7 @@ const randomIv = crypto.randomBytes(16);
 @Injectable()
 export class UsersService {
   constructor(private jwtService: JwtService) {}
-  async findUser(email: string, password: string): Promise<User | string> {
+  async findUser(email: string, password: string): Promise<User> {
     const UserRepository = getRepository(User);
     const singleUser = await UserRepository.findOne({
       where: { email: email },
@@ -29,6 +29,12 @@ export class UsersService {
     if (!singleUser || !validPassword) {
       throw new HttpException('Incorrect credentials!', 401);
     }
+    return singleUser;
+  }
+
+  async findUserById(id: any) {
+    const UserRepository = getRepository(User);
+    const singleUser = await UserRepository.findOne(id);
     return singleUser;
   }
 
@@ -83,6 +89,11 @@ export class UsersService {
   async register(user: any) {
     const UserRepository = getRepository(User);
     const { firstName, lastName, email, password } = user;
+    if (password.length < 8)
+      throw new HttpException(
+        'passwords must be at least eight characters',
+        400,
+      );
     const existingUser = await UserRepository.findOne({
       where: { email: email },
     });
@@ -100,18 +111,18 @@ export class UsersService {
     const savedUser = await newUser.save();
     // automatically create the user wallet
     const walletInstance = new Wallet();
-    walletInstance.user = savedUser;
+    walletInstance.user = newUser;
     await walletInstance.save();
-    return { message: 'user created successfully', savedUser };
+    return { message: 'user created successfully', savedUser, walletInstance };
   }
 
   async login(obj: any) {
     try {
-      const UserRepository = getRepository(User);
-      const user = await UserRepository.findOne({
-        where: { email: obj.email },
-      });
-      console.log(user);
+      // const UserRepository = getRepository(User);
+      // const user = await UserRepository.findOne({
+      //   where: { email: obj.email },
+      // });
+      const user = await this.findUser(obj.email, obj.password);
       const payload = { sub: user.id };
       return {
         access_token: this.jwtService.sign(payload),
@@ -126,7 +137,8 @@ export class UsersService {
   async updateUser(id: any, user: any) {
     try {
       const UserRepository = getRepository(User);
-      const singleUser = await UserRepository.findOne(id);
+      const singleUser = await this.findUserById(id);
+      if (!singleUser) throw new HttpException('User not found', 404);
       if (user.card) {
         user.card = await this.cardTokenization(user.card);
       }

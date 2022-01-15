@@ -48,6 +48,21 @@ export class WalletController {
     return await this.walletService.flutterwaveCharge(payloadObj);
   }
 
+  @Get()
+  async allWallets(@Request() req) {
+    return await this.walletService.getAllWallets();
+  }
+
+  @UseGuards(UserAuthGuard)
+  @Get('user/wallet')
+  async getWallet(@Request() req) {
+    const wallet = await this.walletService.checkIfWalletExists({
+      where: { user: req.user },
+    });
+    if (!wallet) throw new HttpException('wallet not found', 404);
+    return wallet;
+  }
+
   @UseGuards(UserAuthGuard)
   @Post('wallet/withdrawals')
   async withdrawFromWallet(@Request() req) {
@@ -71,6 +86,6 @@ export class WalletController {
 
   @Get('price')
   async getCoin() {
-    return await this.walletService.getCoinData()
+    return await this.walletService.getCoinData();
   }
 }
