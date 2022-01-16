@@ -9,6 +9,7 @@ import { jwtConstants } from './users.constants';
 import { LocalStrategy } from './user.local-strategy';
 import { JwtStrategy } from './user-jwt.strategy';
 import { UserAuthGuard } from './user.guard';
+import { UserDecorator } from './user.decorator';
 
 @Module({
   imports: [

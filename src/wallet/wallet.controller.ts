@@ -4,6 +4,10 @@ import { WalletService } from './wallet.service';
 import { UseGuards } from '@nestjs/common';
 import { Request } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
+import { Wallet } from './wallet.entity';
+import { getRepository } from 'typeorm';
+import { UserDecorator } from '../users/user.decorator';
+import { userLocalGuard } from '../users/user-local.guard';
 
 @Controller('wallets')
 export class WalletController {
@@ -16,6 +20,11 @@ export class WalletController {
   @Post('user/fund-wallet')
   async fundWallet(@Request() req) {
     // get the user card details from the req.user object
+    if (!req.user.card || !req.user.cardCvv || !req.user.cardExpiration)
+      throw new HttpException(
+        'your financial details are not complete, please update your profile!',
+        400,
+      );
 
     const card = await this.userService.cardDecryption(req.user.card);
     const cardCvv = await this.userService.cardDecryption(req.user.cardCvv);
@@ -53,11 +62,16 @@ export class WalletController {
     return await this.walletService.getAllWallets();
   }
 
-  @UseGuards(UserAuthGuard)
+  @UseGuards(userLocalGuard)
   @Get('user/wallet')
-  async getWallet(@Request() req) {
-    const wallet = await this.walletService.checkIfWalletExists({
-      where: { user: req.user },
+  async getWallet(@Request() req, @UserDecorator() user: any) {
+    const walletRepo = getRepository(Wallet);
+    // const wallet = await this.walletService.checkIfWalletExists({
+    //   where: { user: req.user },
+    // });
+    console.log(user);
+    const wallet = await walletRepo.findOne({
+      where: { user: { id: user.id } },
     });
     if (!wallet) throw new HttpException('wallet not found', 404);
     return wallet;
@@ -66,6 +80,11 @@ export class WalletController {
   @UseGuards(UserAuthGuard)
   @Post('wallet/withdrawals')
   async withdrawFromWallet(@Request() req) {
+    if (!req.user.accountNumber)
+      throw new HttpException(
+        'your finanacial details are incomplete!, please update your profile',
+        400,
+      );
     const payload = {
       tx_ref: `ref-withdraw-${Date.now()}`, //This is a unique reference, unique to the particular transaction being carried out. It is generated when it is not provided by the merchant for every transaction.
       amount: req.body.amount, //This is the amount to be charged.

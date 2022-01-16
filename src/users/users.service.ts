@@ -18,7 +18,7 @@ export class UsersService {
     const singleUser = await UserRepository.findOne({
       where: { email: email },
     });
-    console.log(singleUser);
+   // console.log(singleUser);
     if (!singleUser) {
       throw new HttpException('User not found', 404);
     }

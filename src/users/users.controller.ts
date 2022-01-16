@@ -8,6 +8,8 @@ import {
   Param,
   Get,
 } from '@nestjs/common';
+import { userLocalGuard } from './user-local.guard';
+import { UserDecorator } from './user.decorator';
 import { UserAuthGuard } from './user.guard';
 import { UsersService } from './users.service';
 
@@ -21,9 +23,10 @@ export class UsersController {
     return await this.usersService.viewUser(params.id);
   }
 
-  // @UseGuards(UserAuthGuard)
+  @UseGuards(userLocalGuard)
   @Post('auth/login')
-  async login(@Request() req) {
+  async login(@Request() req, @UserDecorator() user: any) {
+    // console.log(user);
     return await this.usersService.login(req.body);
   }
 
@@ -36,8 +39,14 @@ export class UsersController {
 
   @UseGuards(UserAuthGuard)
   @Put('user/update/:id')
-  async update(@Request() req, @Body() user, @Param() params) {
+  async update(
+    @Request() req,
+    @Body() user,
+    @Param() params,
+    @UserDecorator() users: any,
+  ) {
     console.log(params.id);
+    console.log(users);
     return await this.usersService.updateUser(params.id, req.body);
   }
 
