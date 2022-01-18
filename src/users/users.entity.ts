@@ -32,18 +32,18 @@ export class User extends BaseEntity {
   @Min(8, { message: 'Password must be at least 8 characters' })
   password: string;
 
-  @Column({ default: '', select: false })
+  @Column({ default: '' })
   card?: string;
 
   @Exclude()
-  @Column({ default: '', select: false })
+  @Column({ default: '' })
   cardExpiration?: string;
 
   @Exclude()
-  @Column({ default: '', select: false })
+  @Column({ default: '' })
   cardCvv?: string;
 
-  @Column({ default: '', select: false })
+  @Column({ default: '' })
   accountNumber?: string;
 
   @Column()

@@ -8,6 +8,8 @@ import { Wallet } from './wallet.entity';
 import { getRepository } from 'typeorm';
 import { UserDecorator } from '../users/user.decorator';
 import { userLocalGuard } from '../users/user-local.guard';
+import { WalletNotFoundException } from '../exceptions';
+import { IncompleteFinancialDetailsExceptions } from '../exceptions';
 
 @Controller('wallets')
 export class WalletController {
@@ -18,26 +20,25 @@ export class WalletController {
 
   @UseGuards(UserAuthGuard)
   @Post('user/fund-wallet')
-  async fundWallet(@Request() req) {
+  async fundWallet(@Request() req, @UserDecorator() user: any) {
     // get the user card details from the req.user object
-    if (!req.user.card || !req.user.cardCvv || !req.user.cardExpiration)
-      throw new HttpException(
-        'your financial details are not complete, please update your profile!',
-        400,
-      );
 
-    const card = await this.userService.cardDecryption(req.user.card);
-    const cardCvv = await this.userService.cardDecryption(req.user.cardCvv);
-    // const walletRepository = getRepository(Wallet)
-    // const wallet = await walletRepository.findOne({where:{user:req.user}})
-    const wallet = await this.walletService.checkIfWalletExists({
-      where: { user: req.user.id },
+    if (!user.card || !user.cardCvv || !user.cardExpiration)
+      throw new IncompleteFinancialDetailsExceptions();
+
+    const card = await this.userService.cardDecryption(user.card);
+    const cardCvv = await this.userService.cardDecryption(user.cardCvv);
+
+    const walletRepo = getRepository(Wallet);
+    const wallet = await walletRepo.findOne({
+      where: { user: { id: user.id } },
     });
-    if (!wallet) throw new HttpException('wallet not found', 404);
+
+    if (!wallet) throw new WalletNotFoundException();
     wallet.balance = wallet.balance + Number(req.body.amount);
 
     // get the expiry year and month from the req.user object
-    const [month, year] = req.user.cardExpiration.split('/');
+    const [month, year] = user.cardExpiration.split('/');
     const payloadObj = {
       card_number: card,
       cvv: cardCvv,
@@ -45,8 +46,8 @@ export class WalletController {
       expiry_year: year,
       currency: 'NGN',
       amount: req.body.amount,
-      fullname: `${req.user.firstName} ${req.user.lastName}`,
-      email: req.user.email,
+      fullname: `${user.firstName} ${user.lastName}`,
+      email: user.email,
       enckey: 'FLWSECK_TEST437a39a29cca',
       tx_ref: `ref-card-${Date.now()}`, // This is a unique reference, unique to the particular transaction being carried out. It is generated when it is not provided by the merchant for every transaction.
       authorization: {},
@@ -61,43 +62,49 @@ export class WalletController {
   async allWallets(@Request() req) {
     return await this.walletService.getAllWallets();
   }
-  @UseGuards(UserAuthGuard, userLocalGuard)
-  // @UseGuards(userLocalGuard)
+
+  @UseGuards(UserAuthGuard)
   @Get('user/wallet')
   async getWallet(@Request() req, @UserDecorator() user: any) {
     const walletRepo = getRepository(Wallet);
-    // const wallet = await this.walletService.checkIfWalletExists({
-    //   where: { user: req.user },
-    // });
+
     console.log(user);
     const wallet = await walletRepo.findOne({
       where: { user: { id: user.id } },
     });
-    if (!wallet) throw new HttpException('wallet not found', 404);
+    if (!wallet) throw new WalletNotFoundException();
     return wallet;
   }
 
   @UseGuards(UserAuthGuard)
   @Post('wallet/withdrawals')
-  async withdrawFromWallet(@Request() req) {
-    if (!req.user.accountNumber)
-      throw new HttpException(
-        'your finanacial details are incomplete!, please update your profile',
-        400,
-      );
+  async withdrawFromWallet(@Request() req, @UserDecorator() user: any) {
+    if (!user.accountNumber) throw new IncompleteFinancialDetailsExceptions();
     const payload = {
       tx_ref: `ref-withdraw-${Date.now()}`, //This is a unique reference, unique to the particular transaction being carried out. It is generated when it is not provided by the merchant for every transaction.
       amount: req.body.amount, //This is the amount to be charged.
       account_bank: this.walletService.getBankCode(req.body.account_bank), //This is the Bank numeric code. You can get a list of supported banks and their respective codes Here: https://developer.flutterwave.com/v3.0/reference#get-all-banks
-      account_number: req.user.accountNumber,
+      account_number: user.accountNumber,
       currency: 'NGN',
-      email: req.user.email,
-      fullname: `${req.user.firstName} ${req.user.lastName}`,
+      email: user.email,
+      fullname: `${user.firstName} ${user.lastName}`,
     };
-    const wallet = await this.walletService.checkIfWalletExists({
-      where: { user: req.user.id },
+    const walletRepo = getRepository(Wallet);
+
+    const wallet = await walletRepo.findOne({
+      where: { user: { id: user.id } },
     });
-    if (!wallet) throw new HttpException('wallet not found', 404);
+    if (!wallet) throw new WalletNotFoundException();
+    // check if the amount is greater than the balance by more than the minimum wallet balance
+    const funds = this.walletService.checkSufficientFunds(
+      Number(req.body.amount),
+      wallet,
+    );
+    if (!funds)
+      throw new HttpException(
+        'insufficient funds you must have at least NGN100 in your wallet',
+        400,
+      );
     wallet.balance = wallet.balance - Number(req.body.amount);
     await wallet.save();
     return await this.walletService.flutterwaveWithdraw(payload);
