@@ -61,8 +61,8 @@ export class WalletController {
   async allWallets(@Request() req) {
     return await this.walletService.getAllWallets();
   }
-
-  @UseGuards(userLocalGuard)
+  @UseGuards(UserAuthGuard, userLocalGuard)
+  // @UseGuards(userLocalGuard)
   @Get('user/wallet')
   async getWallet(@Request() req, @UserDecorator() user: any) {
     const walletRepo = getRepository(Wallet);
