@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import Flutterwave from 'flutterwave-node-v3';
+const Flutterwave = require('flutterwave-node-v3');
 import { UsersService } from '../users/users.service';
 import { HttpException } from '@nestjs/common';
 import { getRepository } from 'typeorm';
@@ -40,7 +40,7 @@ export class WalletService {
 
       console.log(response);
 
-      return response.data;
+      return response;
     } catch (error: any) {
       console.error(error);
       throw new HttpException(error.message, 500);
@@ -51,14 +51,14 @@ export class WalletService {
     const flw = new Flutterwave(FLW_PUBLIC_KEY, FLW_SECRET_KEY);
     try {
       const response = await flw.Charge.ng(payload);
-      return response.data;
+      return response;
     } catch (error: any) {
       console.error(error);
       throw new HttpException(error.message, 500);
     }
   }
 
-  async getBankCode(bank: string): Promise<string> {
+  public getBankCode(bank: string): string {
     let bank_code = '';
     switch (bank) {
       case (bank = 'Access Bank'):
@@ -137,6 +137,13 @@ export class WalletService {
       console.error(error);
       throw new HttpException(error.message, 500);
     }
+  }
+
+  public checkSufficientFunds(amount: number, wallet: Wallet): boolean {
+    if (wallet.balance - amount < 100) {
+      return false;
+    }
+    return true;
   }
 
   async getCoinData(): Promise<object> {

@@ -2,7 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import * as crypto from 'crypto';
-import { UserNotFoundException } from 'src/exceptions';
+import { UserNotFoundException } from '../exceptions';
 import { getRepository } from 'typeorm';
 import { Wallet } from '../wallet/wallet.entity';
 import { emailRegex, jwtConstants } from './users.constants';
@@ -21,7 +21,7 @@ export class UsersService {
     });
     // console.log(singleUser);
     if (!singleUser) {
-      throw new HttpException('User not found', 404);
+      throw new UserNotFoundException();
     }
     if (!emailRegex.test(email)) {
       throw new HttpException('Invalid email address', 400);
@@ -77,7 +77,7 @@ export class UsersService {
       const UserRepository = getRepository(User);
       const singleUser = await UserRepository.findOne(id);
       if (!singleUser) {
-        throw new HttpException('User not found', 404);
+        throw new UserNotFoundException();
       }
 
       return singleUser;
