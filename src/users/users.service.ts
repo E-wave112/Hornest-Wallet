@@ -1,29 +1,40 @@
 import { HttpException, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcryptjs';
 import * as crypto from 'crypto';
+import { Repository } from 'typeorm';
 import { UserNotFoundException } from '../exceptions';
-import { getRepository } from 'typeorm';
-import { Wallet } from '../wallet/wallet.entity';
-import { emailRegex, jwtConstants } from './users.constants';
-import { User } from './users.entity';
+import { Wallet } from '../wallet/entities/wallet.entity';
+import { CreateUserDto } from './dto/create-user-dto';
+import { LogInUserDto } from './dto/login-user-dto';
+import { User } from './entities/users.entity';
+
 const algorithm = 'aes-256-cbc';
 
 const randomIv = crypto.randomBytes(16);
 
 @Injectable()
 export class UsersService {
-  constructor(private jwtService: JwtService) {}
+  emailRegex = this.configService.get('emailRegex');
+  ENCRYPTION_KEY = this.configService.get('ENCRYPTION_KEY');
+
+  constructor(
+    @InjectRepository(User) private UserRepository: Repository<User>,
+    private jwtService: JwtService,
+    private configService: ConfigService,
+  ) {}
+
   async findUser(email: string, password: string): Promise<User> {
-    const UserRepository = getRepository(User);
-    const singleUser = await UserRepository.findOne({
+    const singleUser = await this.UserRepository.findOne({
       where: { email: email },
     });
     // console.log(singleUser);
     if (!singleUser) {
       throw new UserNotFoundException();
     }
-    if (!emailRegex.test(email)) {
+    if (!this.emailRegex.test(email)) {
       throw new HttpException('Invalid email address', 400);
     }
     const validPassword = await bcrypt.compare(password, singleUser.password);
@@ -34,8 +45,7 @@ export class UsersService {
   }
 
   async findUserById(id: any) {
-    const UserRepository = getRepository(User);
-    const singleUser = await UserRepository.findOne(id);
+    const singleUser = await this.UserRepository.findOne(id);
     return singleUser;
   }
 
@@ -43,7 +53,7 @@ export class UsersService {
     try {
       const cipher = crypto.createCipheriv(
         algorithm,
-        jwtConstants.ENCRYPTION_KEY,
+        this.ENCRYPTION_KEY,
         randomIv,
       );
       let encrypted = cipher.update(obj, 'utf-8', 'hex');
@@ -59,7 +69,7 @@ export class UsersService {
     try {
       const decipher = crypto.createDecipheriv(
         algorithm,
-        jwtConstants.ENCRYPTION_KEY,
+        this.ENCRYPTION_KEY,
         randomIv,
       );
       let decrypted = decipher.update(obj, 'hex', 'utf-8');
@@ -74,8 +84,7 @@ export class UsersService {
 
   async viewUser(id: any) {
     try {
-      const UserRepository = getRepository(User);
-      const singleUser = await UserRepository.findOne(id);
+      const singleUser = await this.UserRepository.findOne(id);
       if (!singleUser) {
         throw new UserNotFoundException();
       }
@@ -87,15 +96,14 @@ export class UsersService {
     }
   }
 
-  async register(user: any) {
-    const UserRepository = getRepository(User);
-    const { firstName, lastName, email, password } = user;
+  async register(body: CreateUserDto) {
+    const { firstName, lastName, email, password } = body;
     if (password.length < 8)
       throw new HttpException(
         'passwords must be at least eight characters',
         400,
       );
-    const existingUser = await UserRepository.findOne({
+    const existingUser = await this.UserRepository.findOne({
       where: { email: email },
     });
     if (existingUser) {
@@ -117,7 +125,7 @@ export class UsersService {
     return { message: 'user created successfully', savedUser, walletInstance };
   }
 
-  async login(obj: any) {
+  async login(obj: LogInUserDto) {
     try {
       // const UserRepository = getRepository(User);
       // const user = await UserRepository.findOne({
@@ -137,7 +145,6 @@ export class UsersService {
 
   async updateUser(id: any, user: any) {
     try {
-      const UserRepository = getRepository(User);
       const singleUser = await this.findUserById(id);
       if (!singleUser) throw new UserNotFoundException();
       if (user.card) {
@@ -147,7 +154,7 @@ export class UsersService {
         user.cardCvv = await this.cardTokenization(user.cardCvv);
       }
 
-      const updatedUser = await UserRepository.save({
+      const updatedUser = await this.UserRepository.save({
         id: singleUser.id,
         ...user,
       });

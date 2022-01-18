@@ -1,27 +1,23 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
-import { getConnectionOptions } from 'typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
+import config from '../ormconfig';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import configuration from './config/configuration';
+import { UsersModule } from './users/users.module';
 import { WalletModule } from './wallet/wallet.module';
-import envConfig from './config/config';
-import nestConfig from './config/nest-config';
-
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env',
       isGlobal: true,
+      expandVariables: true,
+      cache: true,
+      load: [configuration],
     }),
-    TypeOrmModule.forRootAsync({
-      useFactory: async () =>
-        Object.assign(await getConnectionOptions(), {
-          autoLoadEntities: true,
-        }),
-    }),
+
+    TypeOrmModule.forRoot({ ...config, autoLoadEntities: true }),
     UsersModule,
     WalletModule,
   ],

@@ -43,3 +43,6 @@ test.js
 !.vscode/launch.json
 !.vscode/extensions.json
 todo.md
+
+ormconfig.ts
+ormconfig.json

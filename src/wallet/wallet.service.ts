@@ -1,18 +1,21 @@
-import { Injectable } from '@nestjs/common';
-const Flutterwave = require('flutterwave-node-v3');
-import { UsersService } from '../users/users.service';
-import { HttpException } from '@nestjs/common';
-import { getRepository } from 'typeorm';
-import { Wallet } from './wallet.entity';
-import { User } from '../users/users.entity';
-import { CRYPTO_URL } from './wallet.constants';
+import { HttpException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
+import { Repository } from 'typeorm';
+import { User } from '../users/entities/users.entity';
+import { UsersService } from '../users/users.service';
+import { Wallet } from './entities/wallet.entity';
+import { CRYPTO_URL } from './wallet.constants';
+const Flutterwave = require('flutterwave-node-v3');
 const FLW_PUBLIC_KEY: string = process.env.FLW_PUBLIC_KEY;
 const FLW_SECRET_KEY: string = process.env.FLW_SECRET_KEY;
 
 @Injectable()
 export class WalletService {
-  constructor(private userService: UsersService) {}
+  constructor(
+    @InjectRepository(Wallet) private walletRepository: Repository<Wallet>,
+    private userService: UsersService,
+  ) {}
   async flutterwaveCharge(payload: any) {
     const flw = new Flutterwave(FLW_PUBLIC_KEY, FLW_SECRET_KEY);
     try {
@@ -131,8 +134,7 @@ export class WalletService {
 
   async checkIfWalletExists(obj: object): Promise<any | User> {
     try {
-      const walletRepository = getRepository(Wallet);
-      return await walletRepository.findOne(obj);
+      return await this.walletRepository.findOne(obj);
     } catch (error) {
       console.error(error);
       throw new HttpException(error.message, 500);
@@ -158,8 +160,7 @@ export class WalletService {
 
   async getAllWallets(): Promise<Wallet[]> {
     try {
-      const walletRepository = getRepository(Wallet);
-      const wallets = await walletRepository.find();
+      const wallets = await this.walletRepository.find();
       return wallets;
     } catch (error) {
       console.error(error);
