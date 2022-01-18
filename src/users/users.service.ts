@@ -1,11 +1,12 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { User } from './users.entity';
-import { Wallet } from '../wallet/wallet.entity';
-import { getRepository } from 'typeorm';
-import * as bcrypt from 'bcryptjs';
-import { emailRegex, jwtConstants } from './users.constants';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcryptjs';
 import * as crypto from 'crypto';
+import { UserNotFoundException } from 'src/exceptions';
+import { getRepository } from 'typeorm';
+import { Wallet } from '../wallet/wallet.entity';
+import { emailRegex, jwtConstants } from './users.constants';
+import { User } from './users.entity';
 const algorithm = 'aes-256-cbc';
 
 const randomIv = crypto.randomBytes(16);
@@ -18,7 +19,7 @@ export class UsersService {
     const singleUser = await UserRepository.findOne({
       where: { email: email },
     });
-   // console.log(singleUser);
+    // console.log(singleUser);
     if (!singleUser) {
       throw new HttpException('User not found', 404);
     }
@@ -138,7 +139,7 @@ export class UsersService {
     try {
       const UserRepository = getRepository(User);
       const singleUser = await this.findUserById(id);
-      if (!singleUser) throw new HttpException('User not found', 404);
+      if (!singleUser) throw new UserNotFoundException();
       if (user.card) {
         user.card = await this.cardTokenization(user.card);
       }
