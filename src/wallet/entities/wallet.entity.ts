@@ -1,14 +1,14 @@
 import {
-  Column,
-  Entity,
   BaseEntity,
-  PrimaryGeneratedColumn,
+  Column,
   CreateDateColumn,
-  UpdateDateColumn,
-  OneToOne,
+  Entity,
   JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
-import { User } from '../users/users.entity';
+import { User } from '../../users/entities/users.entity';
 
 @Entity('Wallet')
 export class Wallet extends BaseEntity {

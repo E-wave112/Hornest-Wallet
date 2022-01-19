@@ -1,16 +1,24 @@
-import { Controller, Get, HttpException, Post } from '@nestjs/common';
-import { UserAuthGuard } from '../users/user.guard';
-import { WalletService } from './wallet.service';
-import { UseGuards } from '@nestjs/common';
-import { Request } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
-import { Wallet } from './wallet.entity';
+import {
+  Controller,
+  Get,
+  HttpException,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { getRepository } from 'typeorm';
-import { UserDecorator } from '../users/user.decorator';
-import { userLocalGuard } from '../users/user-local.guard';
-import { WalletNotFoundException } from '../exceptions';
-import { IncompleteFinancialDetailsExceptions } from '../exceptions';
+import {
+  IncompleteFinancialDetailsExceptions,
+  WalletNotFoundException,
+} from '../exceptions';
+import { UserDecorator } from '../users/decorators/user.decorator';
+import { UserAuthGuard } from '../users/guards/user.guard';
+import { UsersService } from '../users/users.service';
+import { Wallet } from './entities/wallet.entity';
+import { WalletService } from './wallet.service';
 
+@ApiTags('Wallet')
 @Controller('wallets')
 export class WalletController {
   constructor(

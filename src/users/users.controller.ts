@@ -1,40 +1,57 @@
 import {
   Body,
   Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
   Post,
   Put,
+  Req,
   Request,
   UseGuards,
-  Param,
-  Get,
 } from '@nestjs/common';
-import { userLocalGuard } from './user-local.guard';
-import { UserDecorator } from './user.decorator';
-import { UserAuthGuard } from './user.guard';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { UserDecorator } from './decorators/user.decorator';
+import { CreateUserDto } from './dto/create-user-dto';
+import { LogInUserDto } from './dto/login-user-dto';
+import { userLocalGuard } from './guards/user-local.guard';
+import { UserAuthGuard } from './guards/user.guard';
 import { UsersService } from './users.service';
 
+@ApiTags('Users')
 @Controller()
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @Get('user/:id')
-  async view(@Request() req, @Param() params) {
-    console.log(params.id);
-    return await this.usersService.viewUser(params.id);
+  @UseGuards(UserAuthGuard)
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  @Get('user')
+  async view(@UserDecorator() user: { userId: number }) {
+    return await this.usersService.viewUser(user.userId);
   }
 
   @UseGuards(userLocalGuard)
+  @ApiOkResponse({ status: HttpStatus.OK })
+  @HttpCode(HttpStatus.OK)
   @Post('auth/login')
-  async login(@Request() req, @UserDecorator() user: any) {
-    // console.log(user);
-    return await this.usersService.login(req.body);
+  async login(@Req() req, @Body() body: LogInUserDto) {
+    return await this.usersService.login(body);
   }
 
   @Post('auth/register')
-  async register(@Request() req, @Body() user) {
-    console.log('hello world');
-    console.log(req.body);
-    return await this.usersService.register(req.body);
+  @HttpCode(201)
+  @ApiOkResponse({ status: HttpStatus.CREATED })
+  @ApiOperation({ summary: 'register a user' })
+  async register(@Body() body: CreateUserDto) {
+    return await this.usersService.register(body);
   }
 
   @UseGuards(UserAuthGuard)
@@ -49,9 +66,4 @@ export class UsersController {
     console.log(users);
     return await this.usersService.updateUser(params.id, req.body);
   }
-
-  // @Post('api/v1/auth/login')
-  // async login(@Request() req) {
-  //     return await this.usersService.login(req.user);
-  // }
 }
