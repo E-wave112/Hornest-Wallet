@@ -2,12 +2,13 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
-import config from '../ormconfig';
+// import config from '../ormconfig';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import configuration from './config/configuration';
 import { UsersModule } from './users/users.module';
 import { WalletModule } from './wallet/wallet.module';
+const { DB_HOST, DB_PORT, DB_USERNAME, DB_DATABASE, DB_PASSWORD } = process.env;
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -17,7 +18,24 @@ import { WalletModule } from './wallet/wallet.module';
       load: [configuration],
     }),
 
-    TypeOrmModule.forRoot({ ...config, autoLoadEntities: true }),
+    TypeOrmModule.forRoot(
+      {
+        type: 'postgres',
+        host: DB_HOST,
+        port: parseInt(DB_PORT),
+        username: DB_USERNAME,
+        password: DB_PASSWORD,
+        database: DB_DATABASE,
+        synchronize: false,
+        entities: [],
+        migrations: [
+          "migration/*"
+        ],
+        cli: {
+          migrationsDir: 'migration',
+        },
+        autoLoadEntities: true,
+      }),
     UsersModule,
     WalletModule,
   ],
@@ -25,5 +43,5 @@ import { WalletModule } from './wallet/wallet.module';
   providers: [AppService],
 })
 export class AppModule {
-  constructor(private connection: Connection) {}
+  constructor(private connection: Connection) { }
 }
