@@ -3,7 +3,7 @@
     "host": "localhost",
     "port": 5432,
     "username": "postgres",
-    "entities": "['dist/src/**/*.entity.ts']",
+    "entities": "['src/**/*.entity.ts']",
     "database": "hornest",
     "synchronize": true,
     "autoLoadEntities": true,

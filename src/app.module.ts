@@ -13,7 +13,7 @@ import { WalletModule } from './wallet/wallet.module';
     ConfigModule.forRoot({
       isGlobal: true,
       expandVariables: true,
-      cache: true,
+      cache: false,
       load: [configuration],
     }),
 
