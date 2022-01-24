@@ -18,7 +18,10 @@ const randomIv = crypto.randomBytes(16);
 @Injectable()
 export class UsersService {
   emailRegex = this.configService.get('emailRegex');
-  ENCRYPTION_KEY = this.configService.get('ENCRYPTION_KEY');
+  ENCRYPTION_KEY = Buffer.from(
+    this.configService.get('ENCRYPTION_KEY') as string,
+    'hex',
+  );
 
   constructor(
     @InjectRepository(User) private UserRepository: Repository<User>,

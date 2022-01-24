@@ -6,21 +6,30 @@ import { User } from '../users/entities/users.entity';
 import { UsersService } from '../users/users.service';
 import { Wallet } from './entities/wallet.entity';
 import { CRYPTO_URL } from './wallet.constants';
+import { ConfigService } from '@nestjs/config';
 const Flutterwave = require('flutterwave-node-v3');
-const FLW_PUBLIC_KEY: string = process.env.FLW_PUBLIC_KEY;
-const FLW_SECRET_KEY: string = process.env.FLW_SECRET_KEY;
+// const FLW_PUBLIC_KEY: string = process.env.FLW_PUBLIC_KEY;
+// const FLW_SECRET_KEY: string = process.env.FLW_SECRET_KEY;
 
 @Injectable()
 export class WalletService {
   constructor(
     @InjectRepository(Wallet) private walletRepository: Repository<Wallet>,
     private userService: UsersService,
+    private configService: ConfigService,
   ) {}
   async flutterwaveCharge(payload: any) {
-    const flw = new Flutterwave(FLW_PUBLIC_KEY, FLW_SECRET_KEY);
+    const flw = new Flutterwave(
+      this.configService.get('FLW_PUBLIC_KEY'),
+      this.configService.get('FLW_SECRET_KEY'),
+    );
     try {
       const response = await flw.Charge.card(payload);
       console.log(response);
+      if (response.status === 'error') {
+        return response;
+      }
+
       if (response.meta.authorization.mode === 'pin') {
         const payload2 = payload;
         payload2.authorization = {
@@ -29,7 +38,9 @@ export class WalletService {
           pin: payload.pin,
         };
         const reCallCharge = await flw.Charge.card(payload2);
-
+        if (response.status === 'error') {
+          return response;
+        }
         const callValidate = await flw.Charge.validate({
           otp: payload.otp,
           flw_ref: reCallCharge.data.flw_ref,
@@ -41,8 +52,9 @@ export class WalletService {
         open(url);
       }
 
-      console.log(response);
-
+      // if (response.status === 'success') {
+      //   return 'your transaction was successful';
+      // }
       return response;
     } catch (error: any) {
       console.error(error);
@@ -51,9 +63,15 @@ export class WalletService {
   }
 
   async flutterwaveWithdraw(payload: object) {
-    const flw = new Flutterwave(FLW_PUBLIC_KEY, FLW_SECRET_KEY);
+    const flw = new Flutterwave(
+      this.configService.get('FLW_PUBLIC_KEY'),
+      this.configService.get('FLW_SECRET_KEY'),
+    );
     try {
       const response = await flw.Charge.ng(payload);
+      if (response.status === 'success') {
+        return response;
+      }
       return response;
     } catch (error: any) {
       console.error(error);
