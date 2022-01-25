@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
-import config from '../ormconfig';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import configuration from './config/configuration';
@@ -10,7 +9,7 @@ import { UsersModule } from './users/users.module';
 import { WalletModule } from './wallet/wallet.module';
 import { ConfigService } from '@nestjs/config';
 // instantiate a new config service class for the case of the db_uri
-let configService:ConfigService = new ConfigService(configuration);
+const configService: ConfigService = new ConfigService(configuration);
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -22,7 +21,7 @@ let configService:ConfigService = new ConfigService(configuration);
     TypeOrmModule.forRoot({
       type: 'postgres',
       port: parseInt('5432'),
-      url:configService.get<string>('DB_URI'),
+      url: configService.get<string>('DB_URI'),
       synchronize: true,
       entities: [],
       migrations: [],

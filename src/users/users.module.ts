@@ -15,10 +15,6 @@ import { UsersService } from './users.service';
     TypeOrmModule.forFeature([User]),
     User,
     PassportModule,
-    // JwtModule.register({
-    //   secret: jwtConstants.SECRET_KEY,
-    //   signOptions: { expiresIn: '1d' },
-    // }),
     JwtModule.registerAsync({
       inject: [ConfigService],
       imports: [ConfigModule],
