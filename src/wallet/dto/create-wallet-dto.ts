@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateWalletDto {
   @ApiProperty({
-    description: "The user's id",
+    description: "The user id",
     required: true,
   })
   user: number;
