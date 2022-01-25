@@ -8,8 +8,9 @@ import { AppService } from './app.service';
 import configuration from './config/configuration';
 import { UsersModule } from './users/users.module';
 import { WalletModule } from './wallet/wallet.module';
-import { getConnectionOptions } from 'typeorm';
-const { DB_HOST, DB_PORT, DB_USERNAME, DB_DATABASE, DB_PASSWORD } = process.env;
+import { ConfigService } from '@nestjs/config';
+// instantiate a new config service class for the case of the db_uri
+let configService:ConfigService = new ConfigService(configuration);
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -18,44 +19,15 @@ const { DB_HOST, DB_PORT, DB_USERNAME, DB_DATABASE, DB_PASSWORD } = process.env;
       cache: false,
       load: [configuration],
     }),
-
-    // TypeOrmModule.forRootAsync({
-    //   useFactory: async () =>
-    //     Object.assign(await getConnectionOptions(), {
-    //       autoLoadEntities: true,
-    //     }),
-    // }),
-
-    // TypeOrmModule.forRoot(
-    //   {
-    //     type: 'postgres',
-    //     host: DB_HOST,
-    //     port: parseInt(DB_PORT),
-    //     username: DB_USERNAME,
-    //     password: DB_PASSWORD,
-    //     database: DB_DATABASE,
-    //     synchronize: false,
-    //     entities: [],
-    //     migrations: [
-    //       "migration/*"
-    //     ],
-    //     cli: {
-    //       migrationsDir: 'migration',
-    //     },
-    //     autoLoadEntities: true,
-    //   }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
       port: parseInt('5432'),
-      username: 'ewave',
-      password: 'dwave101',
-      database: 'hornest',
+      url:configService.get<string>('DB_URI'),
       synchronize: true,
-      entities: ['/dist/src/entity/*/.js'],
-      migrations: ['/dist/src/db/migration/*.js'],
+      entities: [],
+      migrations: [],
       cli: {
-        migrationsDir: 'src/db/migration',
+        migrationsDir: 'migrations',
       },
       autoLoadEntities: true,
     }),
