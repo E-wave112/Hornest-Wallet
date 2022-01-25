@@ -21,7 +21,7 @@ async function bootstrap() {
   SwaggerInit(app);
 
   await app.listen(port, () => {
-    Logger.log(`Server running on Port ${host()}`, 'Bootstrap');
+    Logger.log(`Server running on ${host()}`, 'Bootstrap');
     Logger.log(`Swagger running on ${host()}/docs`, 'Swagger');
   });
 }
