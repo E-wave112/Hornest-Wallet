@@ -11,6 +11,7 @@ export default () => ({
   DB_PASSWORD: process.env.DB_PASSWORD,
   DB_DATABASE: process.env.DB_DATABASE,
   DB_URI: process.env.DB_URI,
+  RANDOM_IV:process.env.RANDOM_IV,
   emailRegex:
     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
 });
