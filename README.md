@@ -30,4 +30,4 @@ or
 $ npm run start:dev
 ```
 
-The API is also documented via the NestJs built-in [Open-API](https://swagger.io/specification/) specification
+The API is also documented via [postman](https://documenter.getpostman.com/view/11690328/UVe9S9cc)  and the live url can be found [here](https://hornest-api.herokuapp.com/api/v1)
