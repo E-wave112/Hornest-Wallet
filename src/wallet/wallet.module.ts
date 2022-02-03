@@ -10,6 +10,10 @@ import { WalletService } from './wallet.service';
 @Module({
   controllers: [WalletController],
   providers: [WalletService],
-  imports: [TypeOrmModule.forFeature([Wallet]), UsersModule,TransactionsModule],
+  imports: [
+    TypeOrmModule.forFeature([Wallet]),
+    UsersModule,
+    TransactionsModule,
+  ],
 })
 export class WalletModule {}

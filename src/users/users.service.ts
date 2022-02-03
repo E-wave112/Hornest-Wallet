@@ -13,10 +13,15 @@ import { User } from './entities/users.entity';
 
 const algorithm = 'aes-256-cbc';
 
-
 const secret = Buffer.from('zFYNZEtID8vR5T9lhdBnKhkFj4SB3kDE99OWSmJWhjw=');
 
-const randomIv = Buffer.from(crypto.createHash('sha256').update(String(secret)).digest('base64').substring(0, 16))
+const randomIv = Buffer.from(
+  crypto
+    .createHash('sha256')
+    .update(String(secret))
+    .digest('base64')
+    .substring(0, 16),
+);
 
 @Injectable()
 export class UsersService {
@@ -26,7 +31,13 @@ export class UsersService {
     'hex',
   );
   secret = Buffer.from(this.configService.get<string>('RANDOM_IV'));
-  randomIv = Buffer.from(crypto.createHash('sha256').update(String(secret)).digest('base64').substring(0, 16))
+  randomIv = Buffer.from(
+    crypto
+      .createHash('sha256')
+      .update(String(secret))
+      .digest('base64')
+      .substring(0, 16),
+  );
 
   constructor(
     @InjectRepository(User) private UserRepository: Repository<User>,

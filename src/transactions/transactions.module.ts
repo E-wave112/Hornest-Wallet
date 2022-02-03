@@ -8,9 +8,7 @@ import { UsersModule } from '../users/users.module';
 @Module({
   providers: [TransactionsService],
   controllers: [TransactionsController],
-  imports :[TypeOrmModule.forFeature([Transactions]),UsersModule],
+  imports: [TypeOrmModule.forFeature([Transactions]), UsersModule],
   exports: [TransactionsService],
 })
-
-
 export class TransactionsModule {}

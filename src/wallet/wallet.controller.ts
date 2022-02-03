@@ -30,7 +30,9 @@ export class WalletController {
   @Post('user/fund-wallet')
   async fundWallet(@Request() req, @UserDecorator() user: any) {
     // get the user card details from the req.user object
-    const ref = `funded-${Math.floor(Math.random()*10000000 + 1)}-${user.userId}`
+    const ref = `funded-${Math.floor(Math.random() * 10000000 + 1)}-${
+      user.userId
+    }`;
     const wallet = await this.walletService.checkIfWalletExists({
       where: { user: { id: user.userId } },
     });
@@ -71,13 +73,13 @@ export class WalletController {
       wallet.balance = wallet.balance + Number(req.body.amount);
       await wallet.save();
 
-      const transactionObj:object = {
-          user:user.userId,
-          amount:req.body.amount,
-          type:"CREDIT",
-          status:"SUCCESS",
-          reference:ref
-      }
+      const transactionObj: object = {
+        user: user.userId,
+        amount: req.body.amount,
+        type: 'CREDIT',
+        status: 'SUCCESS',
+        reference: ref,
+      };
       await this.transactionsService.createTransaction(transactionObj);
       return { status: funded.status, message: funded.message, wallet };
     } else {
@@ -104,8 +106,9 @@ export class WalletController {
   @UseGuards(UserAuthGuard)
   @Post('wallet/withdrawals')
   async withdrawFromWallet(@Request() req, @UserDecorator() user: any) {
-
-    const ref = `funded-${Math.floor(Math.random()*10000000 + 1)}-${user.userId}`
+    const ref = `funded-${Math.floor(Math.random() * 10000000 + 1)}-${
+      user.userId
+    }`;
 
     const wallet = await this.walletService.checkIfWalletExists({
       where: { user: { id: user.userId } },
@@ -141,14 +144,14 @@ export class WalletController {
       wallet.balance = wallet.balance - Number(req.body.amount);
       await wallet.save();
 
-      const transactionObj:object = {
-        user:user.userId,
-        amount:req.body.amount,
-        type:"DEBIT",
-        status:"SUCCESS",
-        reference:ref
-    }
-    await this.transactionsService.createTransaction(transactionObj);
+      const transactionObj: object = {
+        user: user.userId,
+        amount: req.body.amount,
+        type: 'DEBIT',
+        status: 'SUCCESS',
+        reference: ref,
+      };
+      await this.transactionsService.createTransaction(transactionObj);
 
       return { status: withdrawal.status, message: withdrawal.message, wallet };
     } else {
