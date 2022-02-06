@@ -4,7 +4,7 @@ A simple(ongoing) wallet system built with NestJS,postgres and TypeORM
 ## Functionalities
 - Abilities for users to be able to save and withdraw money to using the [Flutterwave](https://flutterwave.com/us/) payment gateway.
 - User Card credentials a such as credit-card numbers and [CVV](https://www.idfcfirstbank.com/cvv.html) are stored as encrypted ciphertexts in order for the system to be [PCI DSS compliant](https://en.wikipedia.org/wiki/Payment_Card_Industry_Data_Security_Standard)
-- users can also check the current exchange rates for popular cryptocurrencies(BTC, ETH, DOGE, SHIB, SOL e.t.c) via our very own api! : [bitfast](https://github.com/E-wave112/bitfast_2.0)
+- users can also check the current exchange rates for popular cryptocurrencies(BTC, ETH, DOGE, SHIB, SOL e.t.c) via our very own api : [bitfast](https://github.com/E-wave112/bitfast_2.0)
 
 To get started with this project clone the repo by running the command git clone https://github.com/E-wave112/Hornest-Wallet.git or downloading the zip file
 
