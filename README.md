@@ -31,3 +31,5 @@ $ npm run start:dev
 ```
 
 The API is also documented via [postman](https://documenter.getpostman.com/view/11690328/UVe9S9cc)  and the live url can be found [here](https://hornest-api.herokuapp.com/api/v1)
+
+You can try out the transactions functionality for free using the cards credentials(Card Number, CVVs, expiry) in the documentation
