@@ -13,16 +13,6 @@ import { User } from './entities/users.entity';
 
 const algorithm = 'aes-256-cbc';
 
-const secret = Buffer.from('zFYNZEtID8vR5T9lhdBnKhkFj4SB3kDE99OWSmJWhjw=');
-
-const randomIv = Buffer.from(
-  crypto
-    .createHash('sha256')
-    .update(String(secret))
-    .digest('base64')
-    .substring(0, 16),
-);
-
 @Injectable()
 export class UsersService {
   emailRegex = this.configService.get('emailRegex');
@@ -34,7 +24,7 @@ export class UsersService {
   randomIv = Buffer.from(
     crypto
       .createHash('sha256')
-      .update(String(secret))
+      .update(String(this.secret))
       .digest('base64')
       .substring(0, 16),
   );
@@ -73,7 +63,7 @@ export class UsersService {
       const cipher = crypto.createCipheriv(
         algorithm,
         this.ENCRYPTION_KEY,
-        randomIv,
+        this.randomIv,
       );
       let encrypted = cipher.update(obj, 'utf-8', 'hex');
       encrypted += cipher.final('hex');
@@ -89,7 +79,7 @@ export class UsersService {
       const decipher = crypto.createDecipheriv(
         algorithm,
         this.ENCRYPTION_KEY,
-        randomIv,
+        this.randomIv,
       );
       let decrypted = decipher.update(obj, 'hex', 'utf-8');
       decrypted += decipher.final('utf-8');
