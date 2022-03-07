@@ -7,8 +7,6 @@ import {
   Param,
   Post,
   Put,
-  Req,
-  Request,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -21,15 +19,20 @@ import {
 import { UserDecorator } from './decorators/user.decorator';
 import { CreateUserDto } from './dto/create-user-dto';
 import { LogInUserDto } from './dto/login-user-dto';
+import { User } from './entities/users.entity';
 import { userLocalGuard } from './guards/user-local.guard';
 import { UserAuthGuard } from './guards/user.guard';
 import { UsersService } from './users.service';
+import { Serialize } from 'src/common/interceptors/serialize.interceptor';
+import { ResponseUserDto } from './dto/response-user.dto';
+import { UserDto } from './dto/user.dto';
 
 @ApiTags('Users')
 @Controller()
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
+  @Serialize(UserDto)
   @UseGuards(UserAuthGuard)
   @ApiBearerAuth()
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
@@ -42,7 +45,7 @@ export class UsersController {
   @ApiOkResponse({ status: HttpStatus.OK })
   @HttpCode(HttpStatus.OK)
   @Post('auth/login')
-  async login(@Req() req, @Body() body: LogInUserDto) {
+  async login(@Body() body: LogInUserDto) {
     return await this.usersService.login(body);
   }
 
@@ -54,16 +57,14 @@ export class UsersController {
     return await this.usersService.register(body);
   }
 
+  @Serialize(ResponseUserDto)
   @UseGuards(UserAuthGuard)
   @Put('user/update/:id')
   async update(
-    @Request() req,
-    @Body() user,
-    @Param() params,
-    @UserDecorator() users: any,
+    @Body() body,
+    @Param('id') id: number,
+    @UserDecorator() user: any,
   ) {
-    console.log(params.id);
-    console.log(users);
-    return await this.usersService.updateUser(params.id, req.body);
+    return await this.usersService.updateUser(id, body);
   }
 }

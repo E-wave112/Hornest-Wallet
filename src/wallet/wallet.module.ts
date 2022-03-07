@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CardModule } from 'src/card/card.module';
 import { TransactionsModule } from '../transactions/transactions.module';
 import { TransactionsService } from '../transactions/transactions.service';
 import { UsersModule } from '../users/users.module';
@@ -14,6 +15,7 @@ import { WalletService } from './wallet.service';
     TypeOrmModule.forFeature([Wallet]),
     UsersModule,
     TransactionsModule,
+    CardModule,
   ],
 })
 export class WalletModule {}
