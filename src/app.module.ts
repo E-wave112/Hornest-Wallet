@@ -9,6 +9,7 @@ import { UsersModule } from './users/users.module';
 import { WalletModule } from './wallet/wallet.module';
 import { ConfigService } from '@nestjs/config';
 import { TransactionsModule } from './transactions/transactions.module';
+import { CardModule } from './card/card.module';
 // instantiate a new config service class for the case of the db_uri
 const configService: ConfigService = new ConfigService(configuration);
 @Module({
@@ -34,6 +35,7 @@ const configService: ConfigService = new ConfigService(configuration);
     UsersModule,
     WalletModule,
     TransactionsModule,
+    CardModule,
   ],
   controllers: [AppController],
   providers: [AppService],

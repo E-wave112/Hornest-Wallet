@@ -8,10 +8,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   BeforeInsert,
+  OneToMany,
 } from 'typeorm';
 
 import * as bcrypt from 'bcryptjs';
 import { IsEmail, Min } from 'class-validator';
+import { Card } from 'src/card/entities/card.entities';
 
 @Entity('User')
 export class User extends BaseEntity {
@@ -32,19 +34,25 @@ export class User extends BaseEntity {
   @Min(8, { message: 'Password must be at least 8 characters' })
   password: string;
 
-  @Column({ default: '' })
-  card?: string;
+  @OneToMany((type) => Card, (card) => card.user, {
+    onDelete: 'CASCADE',
+    eager: true,
+  })
+  cards: Card[];
 
-  @Exclude()
-  @Column({ default: '' })
-  cardExpiration?: string;
+  // @Column({ default: '' })
+  // card?: string;
 
-  @Exclude()
-  @Column({ default: '' })
-  cardCvv?: string;
+  // @Exclude()
+  // @Column({ default: '' })
+  // cardExpiration?: string;
 
-  @Column({ default: '' })
-  accountNumber?: string;
+  // @Exclude()
+  // @Column({ default: '' })
+  // cardCvv?: string;
+
+  // @Column({ default: '' })
+  // accountNumber?: string;
 
   @Column()
   @CreateDateColumn()

@@ -1,0 +1,35 @@
+### register user
+POST http://localhost:5000/api/v1/auth/register
+Content-Type: application/json
+
+{
+    "email": "user@example.com",
+    "password": "12345678",
+    "firstName": "Habeeb",
+    "lastName": "Abdulrahman"
+}
+
+### view user
+GET http://localhost:5000/api/v1/user
+
+
+### login user
+POST http://localhost:5000/api/v1/auth/login
+Content-Type: application/json
+
+{
+    "email": "user@example.com",
+    "password": "12345678"
+}
+
+### Add user card
+POST http://localhost:5000/api/v1/card/add
+Content-Type: application/json
+
+{
+    "card": "1234567",
+    "cardExpiration": "2021",
+    "cardCvv": "345",
+    "accountNumber": "12345678",
+    "bank": "uba"
+}

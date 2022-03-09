@@ -53,43 +53,43 @@ export class UsersService {
     return singleUser;
   }
 
-  async findUserById(id: any) {
+  async findUserById(id: number) {
     const singleUser = await this.UserRepository.findOne(id);
     return singleUser;
   }
 
-  async cardTokenization(obj: any) {
-    try {
-      const cipher = crypto.createCipheriv(
-        algorithm,
-        this.ENCRYPTION_KEY,
-        this.randomIv,
-      );
-      let encrypted = cipher.update(obj, 'utf-8', 'hex');
-      encrypted += cipher.final('hex');
-      return encrypted;
-    } catch (err: any) {
-      console.error(err.message);
-      throw new HttpException(err.message, 500);
-    }
-  }
+  // async cardTokenization(obj: any) {
+  //   try {
+  //     const cipher = crypto.createCipheriv(
+  //       algorithm,
+  //       this.ENCRYPTION_KEY,
+  //       this.randomIv,
+  //     );
+  //     let encrypted = cipher.update(obj, 'utf-8', 'hex');
+  //     encrypted += cipher.final('hex');
+  //     return encrypted;
+  //   } catch (err: any) {
+  //     console.error(err.message);
+  //     throw new HttpException(err.message, 500);
+  //   }
+  // }
 
-  async cardDecryption(obj: string) {
-    try {
-      const decipher = crypto.createDecipheriv(
-        algorithm,
-        this.ENCRYPTION_KEY,
-        this.randomIv,
-      );
-      let decrypted = decipher.update(obj, 'hex', 'utf-8');
-      decrypted += decipher.final('utf-8');
-      // console.log(decrypted);
-      return decrypted;
-    } catch (err: any) {
-      console.error(err.message);
-      throw new HttpException(err.message, 500);
-    }
-  }
+  // async cardDecryption(obj: string) {
+  //   try {
+  //     const decipher = crypto.createDecipheriv(
+  //       algorithm,
+  //       this.ENCRYPTION_KEY,
+  //       this.randomIv,
+  //     );
+  //     let decrypted = decipher.update(obj, 'hex', 'utf-8');
+  //     decrypted += decipher.final('utf-8');
+  //     // console.log(decrypted);
+  //     return decrypted;
+  //   } catch (err: any) {
+  //     console.error(err.message);
+  //     throw new HttpException(err.message, 500);
+  //   }
+  // }
 
   async viewUser(id: any) {
     try {
@@ -152,23 +152,16 @@ export class UsersService {
     }
   }
 
-  async updateUser(id: any, user: any) {
+  async updateUser(id: number, attrs: Partial<User>) {
     try {
       const singleUser = await this.findUserById(id);
+
       if (!singleUser) throw new UserNotFoundException();
-      if (user.card) {
-        user.card = await this.cardTokenization(user.card);
-      }
-      if (user.cardCvv) {
-        user.cardCvv = await this.cardTokenization(user.cardCvv);
-      }
 
-      const updatedUser = await this.UserRepository.save({
-        id: singleUser.id,
-        ...user,
-      });
+      Object.assign(singleUser, attrs);
+      const user = await this.UserRepository.save(singleUser);
 
-      return { message: 'user updated successfully', updatedUser };
+      return user;
     } catch (err: any) {
       console.error(err.message);
       throw new HttpException(err.message, 500);

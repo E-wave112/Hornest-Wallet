@@ -23,7 +23,6 @@ export class WalletService {
     );
     try {
       const response = await flw.Charge.card(payload);
-      console.log(response);
       if (response.status === 'error') {
         return response;
       }
@@ -35,6 +34,7 @@ export class WalletService {
           fields: ['pin'],
           pin: payload.pin,
         };
+
         const reCallCharge = await flw.Charge.card(payload2);
         if (response.status === 'error') {
           return response;
@@ -43,7 +43,6 @@ export class WalletService {
           otp: payload.otp,
           flw_ref: reCallCharge.data.flw_ref,
         });
-        // console.log(callValidate)
       }
       if (response.meta.authorization.mode === 'redirect') {
         const url = response.meta.authorization.redirect;
