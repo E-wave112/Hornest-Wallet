@@ -33,3 +33,11 @@ $ npm run start:dev
 The API is also documented via [postman](https://documenter.getpostman.com/view/11690328/UVe9S9cc)  and the live url can be found [here](https://hornest-api.herokuapp.com/api/v1)
 
 You can try out the transactions functionality for free using the cards credentials(Card Number, CVVs, expiry) in the documentation
+
+## CONTRIBUTING TO HORNEST WALLET
+#### While the hornest-wallet project is completely free to use and open source, here are a few things to note when making Pull Requests
+
+- Ensure the PR is made to the ```dev``` branch so it can be reviewed before it gets merged to the main branch (we are currently looking to implement a CI/CD pipeline as soon as possible) so as to automate things and reduce room for human error
+- The code architecture and design pattern for the PR should be consistent with the existing codebase
+
+## Your Contributions are highly appreciated!
