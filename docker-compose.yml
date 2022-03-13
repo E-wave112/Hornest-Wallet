@@ -1,0 +1,32 @@
+version: "3.7"
+
+services:
+  web:
+    image: hornest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    container_name: hornest-wallet
+    restart: always
+    ports:
+      - "${PORT}:${PORT}"
+    volumes:
+      - .:/usr/src/app
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - PORT=${PORT}
+      - SECRET_KEY=${SECRET_KEY}
+      - RANDOM_IV=${RANDOM_IV}
+      - FLW_SECRET_KEY=${FLW_SECRET_KEY}
+      - FLW_PUBLIC_KEY=${FLW_PUBLIC_KEY}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - DB_URI=${DB_URI}
+    networks:
+      - hornestwallet-network
+
+networks:
+  hornestwallet-network:
+    name: hornestwallet-network
