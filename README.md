@@ -34,6 +34,25 @@ The API is also documented via [postman](https://documenter.getpostman.com/view/
 
 You can try out the transactions functionality for free using the cards credentials(Card Number, CVVs, expiry) in the documentation
 
+
+### Build the initial docker image
+```
+docker-compose up web
+```
+### Running the Dev Docker container
+
+To run the container, use the following command:
+
+```
+$ docker-compose up
+```
+
+ - The server will be running on [localhost:5000](http://0.0.0.0:5000)
+
+ - Find my Docker image on the cloud [here](https://hub.docker.com/repository/docker/ewave112/hornest)
+
+ - A useful resource on how to push your docker image to [DockerHub](https://hub.docker.com)  can be found [here](https://ropenscilabs.github.io/r-docker-tutorial/04-Dockerhub.html)
+
 ## CONTRIBUTING TO HORNEST WALLET
 #### While the hornest-wallet project is completely free to use and open source, here are a few things to note when making Pull Requests
 
