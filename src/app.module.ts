@@ -10,10 +10,14 @@ import { WalletModule } from './wallet/wallet.module';
 import { ConfigService } from '@nestjs/config';
 import { TransactionsModule } from './transactions/transactions.module';
 import { CardModule } from './card/card.module';
+import { MailModule } from './mail/mail.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { SchedulerModule } from './scheduler/scheduler.module';
 // instantiate a new config service class for the case of the db_uri
 const configService: ConfigService = new ConfigService(configuration);
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
       expandVariables: true,
@@ -36,6 +40,8 @@ const configService: ConfigService = new ConfigService(configuration);
     WalletModule,
     TransactionsModule,
     CardModule,
+    MailModule,
+    SchedulerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

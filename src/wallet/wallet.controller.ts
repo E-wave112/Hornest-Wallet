@@ -167,6 +167,6 @@ export class WalletController {
 
   @Get('price')
   async getCoin() {
-    return await this.walletService.getCoinData();
+    return await this.walletService.getCoinPrice();
   }
 }

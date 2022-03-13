@@ -163,7 +163,7 @@ export class WalletService {
     return true;
   }
 
-  async getCoinData(): Promise<object> {
+  async getCoinPrice(): Promise<object> {
     try {
       const response = await axios.get(CRYPTO_URL);
       return response.data;
