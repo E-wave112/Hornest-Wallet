@@ -19,6 +19,7 @@ export class SchedulerService {
     };
     const users = await this.userService.findAll(query);
     const prices = await this.walletService.getCoinPrice();
+
     await this.mailService.sendMultipleEmail('price_alert', users, prices);
   }
 
@@ -27,5 +28,18 @@ export class SchedulerService {
     const query = {
       where: { pricePrediction: true },
     };
+
+    const today = new Date();
+    const date =
+      today.getFullYear() +
+      '-' +
+      (today.getMonth() + 1) +
+      '-' +
+      today.getDate();
+    const users = await this.userService.findAll(query);
+    const prices = await this.walletService.predictPrice({
+      date_entered: date,
+    });
+    await this.mailService.sendMultipleEmail('price_prediction', users, prices);
   }
 }

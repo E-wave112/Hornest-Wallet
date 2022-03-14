@@ -45,6 +45,9 @@ export class User extends BaseEntity {
   @Column({ default: false })
   priceAlert: boolean;
 
+  @Column({ default: false })
+  pricePrediction: boolean;
+
   @Column()
   @CreateDateColumn()
   createdAt: Date;

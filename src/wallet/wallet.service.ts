@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { User } from '../users/entities/users.entity';
 import { UsersService } from '../users/users.service';
 import { Wallet } from './entities/wallet.entity';
-import { CRYPTO_URL } from './wallet.constants';
+import { CRYPTO_URL, CRYPTO_PREDICT_URL } from './wallet.constants';
 import { ConfigService } from '@nestjs/config';
 const Flutterwave = require('flutterwave-node-v3');
 
@@ -166,6 +166,16 @@ export class WalletService {
   async getCoinPrice(): Promise<object> {
     try {
       const response = await axios.get(CRYPTO_URL);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(error.message, 500);
+    }
+  }
+
+  async predictPrice(data: any): Promise<object> {
+    try {
+      const response = await axios.post(CRYPTO_PREDICT_URL, data);
       return response.data;
     } catch (error) {
       console.error(error);
