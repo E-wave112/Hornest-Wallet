@@ -40,8 +40,8 @@ export class CardService {
     newCvv: string,
     accountNumber: string,
     bank: string,
-    pin: string,
-    otp: string,
+    // pin: string,
+    // otp: string,
   ) {
     const cardExists = await this.cardRepo.find({
       where: { cardExpiration },
@@ -57,8 +57,8 @@ export class CardService {
       cardExpiration,
       cardCvv,
       accountNumber,
-      pin,
-      otp,
+      // pin,
+      // otp,
     });
 
     account.user = userId;
