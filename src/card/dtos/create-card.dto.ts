@@ -16,9 +16,9 @@ export class createCardDto {
   @IsString()
   accountNumber: string;
 
-  @IsString()
-  pin: string;
+  // @IsString()
+  // pin: string;
 
-  @IsString()
-  otp: string;
+  // @IsString()
+  // otp: string;
 }

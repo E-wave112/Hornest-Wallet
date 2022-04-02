@@ -1,8 +1,10 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MailModule } from 'src/mail/mail.module';
+import { MailService } from 'src/mail/mail.service';
 import { User } from './entities/users.entity';
 import { UserAuthGuard } from './guards/user.guard';
 import { JwtStrategy } from './user-jwt.strategy';
@@ -14,6 +16,8 @@ import { UsersService } from './users.service';
   imports: [
     TypeOrmModule.forFeature([User]),
     User,
+    MailModule,
+    // forwardRef(() => MailModule),
     PassportModule,
     JwtModule.registerAsync({
       inject: [ConfigService],

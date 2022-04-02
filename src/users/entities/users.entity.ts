@@ -9,6 +9,8 @@ import {
   UpdateDateColumn,
   BeforeInsert,
   OneToMany,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 
 import * as bcrypt from 'bcryptjs';
@@ -40,19 +42,11 @@ export class User extends BaseEntity {
   })
   cards: Card[];
 
-  // @Column({ default: '' })
-  // card?: string;
+  @Column({ default: false })
+  priceAlert: boolean;
 
-  // @Exclude()
-  // @Column({ default: '' })
-  // cardExpiration?: string;
-
-  // @Exclude()
-  // @Column({ default: '' })
-  // cardCvv?: string;
-
-  // @Column({ default: '' })
-  // accountNumber?: string;
+  @Column({ default: false })
+  pricePrediction: boolean;
 
   @Column()
   @CreateDateColumn()

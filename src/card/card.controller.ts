@@ -24,8 +24,7 @@ export class CardController {
     @Body() body: createCardDto,
     @UserDecorator() user: { userId: number },
   ) {
-    const { bank, card, cardExpiration, cardCvv, accountNumber, pin, otp } =
-      body;
+    const { bank, card, cardExpiration, cardCvv, accountNumber } = body;
     const newCard = await this.cardService.create(
       user.userId,
       card,
@@ -33,8 +32,8 @@ export class CardController {
       cardCvv,
       accountNumber,
       bank,
-      pin,
-      otp,
+      // pin,
+      // otp,
     );
     return newCard;
   }
