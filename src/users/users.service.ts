@@ -1,7 +1,8 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { forwardRef, HttpException, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import { MailService } from 'src/mail/mail.service';
 import * as bcrypt from 'bcryptjs';
 import * as crypto from 'crypto';
 import { Repository } from 'typeorm';
@@ -10,6 +11,7 @@ import { Wallet } from '../wallet/entities/wallet.entity';
 import { CreateUserDto } from './dto/create-user-dto';
 import { LogInUserDto } from './dto/login-user-dto';
 import { User } from './entities/users.entity';
+import { Query } from 'typeorm/driver/Query';
 
 const algorithm = 'aes-256-cbc';
 
@@ -30,7 +32,10 @@ export class UsersService {
   );
 
   constructor(
-    @InjectRepository(User) private UserRepository: Repository<User>,
+    // @Inject(forwardRef(() => MailService))
+    private mailService: MailService,
+    @InjectRepository(User)
+    private UserRepository: Repository<User>,
     private jwtService: JwtService,
     private configService: ConfigService,
   ) {}
@@ -58,38 +63,10 @@ export class UsersService {
     return singleUser;
   }
 
-  // async cardTokenization(obj: any) {
-  //   try {
-  //     const cipher = crypto.createCipheriv(
-  //       algorithm,
-  //       this.ENCRYPTION_KEY,
-  //       this.randomIv,
-  //     );
-  //     let encrypted = cipher.update(obj, 'utf-8', 'hex');
-  //     encrypted += cipher.final('hex');
-  //     return encrypted;
-  //   } catch (err: any) {
-  //     console.error(err.message);
-  //     throw new HttpException(err.message, 500);
-  //   }
-  // }
-
-  // async cardDecryption(obj: string) {
-  //   try {
-  //     const decipher = crypto.createDecipheriv(
-  //       algorithm,
-  //       this.ENCRYPTION_KEY,
-  //       this.randomIv,
-  //     );
-  //     let decrypted = decipher.update(obj, 'hex', 'utf-8');
-  //     decrypted += decipher.final('utf-8');
-  //     // console.log(decrypted);
-  //     return decrypted;
-  //   } catch (err: any) {
-  //     console.error(err.message);
-  //     throw new HttpException(err.message, 500);
-  //   }
-  // }
+  async findAll(query) {
+    const users = await this.UserRepository.find(query);
+    return users;
+  }
 
   async viewUser(id: any) {
     try {
@@ -131,6 +108,8 @@ export class UsersService {
     const walletInstance = new Wallet();
     walletInstance.user = newUser;
     await walletInstance.save();
+
+    await this.mailService.sendEmail('welcome', savedUser);
     return { message: 'user created successfully', savedUser, walletInstance };
   }
 

@@ -68,8 +68,8 @@ export class WalletController {
       enckey: 'FLWSECK_TEST437a39a29cca',
       tx_ref: `ref-card-${Date.now()}`, // This is a unique reference, unique to the particular transaction being carried out. It is generated when it is not provided by the merchant for every transaction.
       authorization: {},
-      pin: bankCard.pin,
-      otp: bankCard.otp,
+      pin: body.pin,
+      otp: body.otp,
     };
 
     const funded = await this.walletService.flutterwaveCharge(payloadObj);
@@ -167,6 +167,6 @@ export class WalletController {
 
   @Get('price')
   async getCoin() {
-    return await this.walletService.getCoinData();
+    return await this.walletService.getCoinPrice();
   }
 }

@@ -17,5 +17,6 @@ import { WalletService } from './wallet.service';
     TransactionsModule,
     CardModule,
   ],
+  exports: [WalletService],
 })
 export class WalletModule {}

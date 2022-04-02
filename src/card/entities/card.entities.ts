@@ -33,11 +33,11 @@ export class Card extends BaseEntity {
   @Column({ default: '' })
   accountNumber?: string;
 
-  @Column({ default: '' })
-  pin?: string;
+  // @Column({ default: '' })
+  // pin?: string;
 
-  @Column({ default: '' })
-  otp?: string;
+  // @Column({ default: '' })
+  // otp?: string;
 
   @Column()
   @CreateDateColumn()
