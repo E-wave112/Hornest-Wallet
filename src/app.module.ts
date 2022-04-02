@@ -28,7 +28,7 @@ const configService: ConfigService = new ConfigService(configuration);
       type: 'postgres',
       port: parseInt('5432'),
       url: configService.get<string>('DB_URI'),
-      synchronize: true,
+      synchronize: false,
       entities: [],
       migrations: [],
       cli: {
