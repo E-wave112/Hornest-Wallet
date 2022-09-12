@@ -34,11 +34,12 @@ The API is also documented via [postman](https://documenter.getpostman.com/view/
 You can try out the transactions functionality for free using the cards credentials(Card Number, CVVs, expiry) in the documentation
 
 
-### Build the initial docker image
+### Containerizing the API
+#### Build the initial docker image
 ```
-docker-compose up web
+docker-compose up --build
 ```
-### Running the Dev Docker container
+#### Running the Dev Docker container
 
 To run the container, use the following command:
 
