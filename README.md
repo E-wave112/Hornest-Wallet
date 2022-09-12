@@ -11,7 +11,6 @@ To get started with this project, clone the repo by running the command git clon
 In the root of the project run the following command
 
 ```
-recommended
 $ yarn
 ```
 
@@ -49,7 +48,7 @@ $ docker-compose up
 
  - The server will be running on [localhost:5000](http://0.0.0.0:5000)
 
- - Find my Docker image on the cloud [here](https://hub.docker.com/repository/docker/ewave112/hornest)
+ - Find the Docker image on the cloud [here](https://hub.docker.com/repository/docker/ewave112/hornest)
 
  - A useful resource on how to push your docker image to [DockerHub](https://hub.docker.com)  can be found [here](https://ropenscilabs.github.io/r-docker-tutorial/04-Dockerhub.html)
 
