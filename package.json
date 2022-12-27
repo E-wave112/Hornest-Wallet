@@ -44,7 +44,7 @@
     "rxjs": "^7.2.0",
     "typeorm": "^0.2.41",
     "@nestjs/config": "^1.1.6",
-    "@nestjs/jwt": "^8.0.0",
+    "@nestjs/jwt": "^10.0.0",
     "@nestjs/passport": "^8.0.1",
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/swagger": "^5.1.5",
