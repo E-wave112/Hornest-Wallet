@@ -42,7 +42,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
-    "typeorm": "^0.2.41",
+    "typeorm": "^0.3.14",
     "@nestjs/config": "^1.1.6",
     "@nestjs/jwt": "^8.0.0",
     "@nestjs/passport": "^8.0.1",
