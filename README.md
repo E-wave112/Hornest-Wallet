@@ -10,23 +10,23 @@ To get started with this project, clone the repo by running the command git clon
 
 In the root of the project run the following command
 
-```
-$ yarn
+```bash
+ yarn
 ```
 
 or
-```
-$ npm install
+```bash
+ npm install
 ```
 Start the development server (remember to put in the right environment variables) via the command
 
-```
-$ yarn start:dev
+```bash
+ yarn start:dev
 ```
 or
 
-```
-$ npm run start:dev
+```bash
+ npm run start:dev
 ```
 
 The API is also documented via [postman](https://documenter.getpostman.com/view/11690328/UVe9S9cc)  and the live url can be found [here](https://hornest-api.herokuapp.com/api/v1)
@@ -36,15 +36,15 @@ You can try out the transactions functionality for free using the cards credenti
 
 ### Containerizing the API
 #### Build the initial docker image
-```
+```bash
 docker-compose up --build
 ```
 #### Running the Dev Docker container
 
 To run the container, use the following command:
 
-```
-$ docker-compose up
+```bash
+ docker-compose up
 ```
 
  - The server will be running on [localhost:5000](http://0.0.0.0:5000)
