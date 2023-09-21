@@ -27,7 +27,7 @@
   "dependencies": {
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
-    "@nestjs/cli": "^8.0.0",
+    "@nestjs/cli": "^9.3.0",
     "@nestjs/platform-express": "^8.0.0",
     "axios": "^0.24.0",
     "bcryptjs": "^2.4.3",
