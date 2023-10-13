@@ -2643,17 +2643,17 @@ flatted@^3.1.0:
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.2.4.tgz#28d9969ea90661b5134259f312ab6aa7929ac5e2"
   integrity sha512-8/sOawo8tJ4QOBX8YlQBMxL8+RLZfxMQOif9o0KUKTNTjMYElWPE0r/m5VNFxTRd0NSw8qSy8dajrwX4RYI1Hw==
 
-flutterwave-node-v3@^1.0.9:
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/flutterwave-node-v3/-/flutterwave-node-v3-1.0.9.tgz#0f1a279872cb45334fb2b4f5b9b031e18f79f9be"
-  integrity sha512-IA8Y8qx9ybNjMUp8oBTXCudSGpJVg/eWpWo4q1SQVI7VsuOMFfAwUS58CsVD+0wGna/svDlDNCgJKk6pD5D1Ew==
+flutterwave-node-v3@^1.0.10:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/flutterwave-node-v3/-/flutterwave-node-v3-1.0.10.tgz#e02aaa564ef672d8761df8b4c9bb9fd4a7e0da11"
+  integrity sha512-iI0gzOuWhcuxYKn3o4exFF9pX5Drej2mVcEEUhmdZkR/HMAV4wdZScaFW54hvmEoYjEICFzx3fGL5R0GvgjUSQ==
   dependencies:
     axios "^0.21.4"
     bluebird "^3.7.2"
     chai-as-promised-also-chain "^1.0.2"
     md5 "^2.3.0"
     morx "0.0.5"
-    node-forge "0.10.0"
+    node-forge "1.3.0"
     q "^1.5.1"
     request "^2.88.2"
     sha.js "^2.4.11"
@@ -4137,10 +4137,10 @@ node-fetch@^2.6.1:
   dependencies:
     whatwg-url "^5.0.0"
 
-node-forge@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.10.0.tgz#32dea2afb3e9926f02ee5ce8794902691a676bf3"
-  integrity sha512-PPmu8eEeG9saEUvI97fm4OYxXVB6bFvyNTyiUOBichBpFG8A1Ljw3bY62+5oOjDEMHRnd0Y7HQ+x7uzxOzC6JA==
+node-forge@1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-1.3.0.tgz#37a874ea723855f37db091e6c186e5b67a01d4b2"
+  integrity sha512-08ARB91bUi6zNKzVmaj3QO7cr397uiDT2nJ63cHjyNtCTWIgvS47j3eT0WfzUwS9+6Z5YshRaoasFkXCKrIYbA==
 
 node-int64@^0.4.0:
   version "0.4.0"
